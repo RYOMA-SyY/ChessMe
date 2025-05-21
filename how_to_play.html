@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Master - How to Play</title>
+    <link rel="stylesheet" href="home.css"> <!-- Link to home.css for shared styles -->
+    <link rel="stylesheet" href="how_to_play.css"> <!-- Specific styles for this page -->
+</head>
+<body>
+    <div class="chess-background"></div> <!-- Same background as home page -->
+
+    <div class="container">
+        <header>
+            <div class="theme-toggle">
+                <button id="themeToggle" class="theme-button" aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+            <h1 class="title">How to Play Chess</h1>
+            <p class="subtitle">Master the Basics</p>
+        </header>
+
+        <main>
+            <section class="rules">
+                <h2>Basic Rules</h2>
+                <p>Chess is a two-player strategy board game played on a checkered board with 64 squares arranged in an 8x8 grid. Each player begins the game with 16 pieces: one king, one queen, two rooks, two knights, two bishops, and eight pawns. The object of the game is to checkmate the opponent's king, whereby the king is under immediate attack (in check) and there is no way to remove or defend it on the next move.</p>
+                
+                <h3>Piece Movements</h3>
+                <p>Each chess piece has its own unique way of moving on the board. Click on a piece to see its possible moves!</p>
+
+                <!-- Interactive Piece Movement Demonstrations -->
+                <div class="piece-demonstrations">
+
+                    <div class="piece-demo">
+                        <h4>Pawn (♙/♟)</h4>
+                        <p>Pawns move forward one square, but capture diagonally one square forward. On their first move, they can move two squares. They have special moves like en passant and promotion.</p>
+                        <div class="small-board" data-piece="p"></div>
+                    </div>
+
+                    <div class="piece-demo">
+                        <h4>Knight (♘/♞)</h4>
+                        <p>Knights move in an 'L' shape: two squares in one direction (horizontally or vertically) and then one square perpendicular. They are the only pieces that can jump over others.</p>
+                        <div class="small-board" data-piece="n"></div>
+                    </div>
+
+                    <div class="piece-demo">
+                        <h4>Bishop (♗/♝)</h4>
+                        <p>Bishops move any number of vacant squares diagonally. They stay on squares of the same color.</p>
+                        <div class="small-board" data-piece="b"></div>
+                    </div>
+
+                    <div class="piece-demo">
+                        <h4>Rook (♖/♜)</h4>
+                        <p>Rooks move any number of vacant squares horizontally or vertically. They are powerful pieces, especially in the later stages of the game.</p>
+                        <div class="small-board" data-piece="r"></div>
+                    </div>
+
+                    <div class="piece-demo">
+                        <h4>Queen (♕/♛)</h4>
+                        <p>The Queen is the most powerful piece, combining the movement of a Rook and a Bishop. It can move any number of vacant squares horizontally, vertically, or diagonally.</p>
+                        <div class="small-board" data-piece="q"></div>
+                    </div>
+
+                    <div class="piece-demo">
+                        <h4>King (♔/♚)</h4>
+                        <p>The King moves one square in any direction (horizontally, vertically, or diagonally). The King is the most important piece; if it's checkmated, the game is over.</p>
+                        <div class="small-board" data-piece="k"></div>
+                    </div>
+
+                </div>
+
+                <h3>Special Moves</h3>
+                <ul>
+                    <li><strong>Castling:</strong> A special move involving the king and a rook of the same color, allowing the king to move two squares towards the rook and the rook to move to the square the king crossed over.</li>
+                    <li><strong>En Passant:</strong> A special pawn capture that can occur when a pawn moves two squares forward from its starting position, and an opponent's pawn is on an adjacent square on the same rank.</li>
+                    <li><strong>Pawn Promotion:</strong> When a pawn reaches the farthest rank from its starting position, it can be promoted to any other piece (Queen, Rook, Bishop, or Knight) of the same color, except for a king.</li>
+                </ul>
+
+                <h3>Winning the Game</h3>
+                <ul>
+                    <li><strong>Checkmate:</strong> When a king is under attack (in check) and cannot escape capture on the next move.</li>
+                    <li><strong>Stalemate:</strong> When a player whose turn it is to move has no legal moves, but is not in check. This results in a draw.</li>
+                    <li><strong>Resignation:</strong> A player may resign at any time, resulting in a win for the other player.</li>
+                </ul>
+            </section>
+
+            <!-- Interactive demonstrations can be added here later -->
+        </main>
+
+        <footer>
+            <p>Created with ♟️ Chess Master</p>
+        </footer>
+    </div>
+
+    <script src="home.js"></script> <!-- Link to home.js for theme toggle -->
+    <script src="how_to_play.js"></script> <!-- Link to new script for demonstrations -->
+</body>
+</html> 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chess Master - Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-container">
+    <header class="game-header">
+      <div class="theme-toggle">
+        <button id="themeToggle" class="theme-button" aria-label="Toggle theme">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
+      <h1>Chess Master</h1>
+      <div id="status">White's Turn</div>
+    </header>
+
+    <main class="game-main">
+      <div id="board"></div>
+      <div class="game-controls">
+        <button id="reset" class="control-button">New Game</button>
+        <button id="undo" class="control-button">Undo Move</button>
+        <button id="homeButton" class="control-button">Home</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Promotion Modal -->
+  <div id="promotionModal" class="modal">
+    <div class="modal-content">
+      <h2>Choose piece for promotion:</h2>
+      <div class="promotion-choices">
+        <button class="promotion-piece" data-piece="q">♛</button>
+        <button class="promotion-piece" data-piece="r">♜</button>
+        <button class="promotion-piece" data-piece="b">♝</button>
+        <button class="promotion-piece" data-piece="n">♞</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -33,7 +33,7 @@ Implement movement rules for each piece type, including capturing.
 
 Enforce turn-based play: white starts, then alternate.
 
-Validate legal moves (e.g., pawns can’t move backward, bishops only move diagonally, etc.).
+Validate legal moves (e.g., pawns can't move backward, bishops only move diagonally, etc.).
 
 Prevent illegal moves such as capturing your own pieces or moving into check.
 
@@ -43,7 +43,7 @@ Highlight the selected piece.
 
 Highlight all valid destination squares.
 
-Indicate the current player’s turn.
+Indicate the current player's turn.
 
 Game State Management:
 
@@ -58,4 +58,38 @@ Controls:
 Add a reset or "New Game" button to restart the match.
 
 Display game status (e.g., "White's Turn", "Black in Check", "Checkmate").
+
+🔹 Landing Page Requirements:
+
+Design a chess-themed landing page with the following elements:
+
+Visual Design:
+- Create a sophisticated, chess-inspired color scheme using dark and light squares as the base
+- Implement a responsive layout that works well on both desktop and mobile devices
+- Use chess-themed decorative elements (e.g., chess pieces as design accents)
+- Include subtle animations for interactive elements
+
+Main Components:
+- Large, eye-catching title with chess-themed typography
+- Prominent "Play Now" button with hover effects
+- Optional "How to Play" section with basic rules
+- Chess-themed background pattern or subtle animation
+
+Interactive Elements:
+- Animated chess pieces or board elements in the background
+- Hover effects on all interactive elements
+- Smooth transitions between pages
+- Optional chess piece movement animation in the background
+
+Additional Features:
+- Simple navigation menu
+- Optional dark/light theme toggle
+- Responsive design that maintains chess theme across all screen sizes
+- Loading animation with chess pieces when transitioning to the game
+
+Technical Requirements:
+- Use only vanilla HTML, CSS, and JavaScript
+- Ensure fast loading times
+- Implement smooth transitions between landing page and game
+- Maintain consistent chess theme throughout
 

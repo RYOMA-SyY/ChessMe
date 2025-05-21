@@ -10,23 +10,33 @@ A fully functional, two-player chess game built using vanilla HTML, CSS, and Jav
 - ⚔️ Turn-based gameplay with proper validation
 - 🏆 Game state management including check and checkmate detection
 - 🔄 Reset functionality for new games
+- 🌓 Dark/Light theme toggle with persistent preferences
+- 🎨 Modern landing page with animated chess board background
+- 📚 Interactive "How to Play" guide with piece movement demonstrations
+- 📱 Responsive design for all screen sizes
 
 ## Project Structure
 
-- `index.html` - Main HTML file containing the game board and UI elements
-- `style.css` - Styling for the chess board and game interface
+- `home.html` - Landing page with animated background and theme toggle
+- `index.html` - Main game interface
+- `how_to_play.html` - Interactive tutorial page
+- `style.css` - Core styling for the game interface
+- `home.css` - Styling for the landing page
 - `script.js` - Core game logic and functionality
-- `todo.md` - Project requirements and specifications
+- `home.js` - Landing page interactions and theme management
 
 ## How to Play
 
-1. Open `index.html` in a web browser
-2. White moves first
-3. Click on a piece to select it
-4. Valid moves will be highlighted
-5. Click on a highlighted square to move the selected piece
-6. The game will automatically switch turns between players
-7. Use the "New Game" button to reset the board
+1. Open `home.html` to access the landing page
+2. Choose your preferred theme (dark/light)
+3. Click "Play Now" to start a new game
+4. White moves first
+5. Click on a piece to select it
+6. Valid moves will be highlighted
+7. Click on a highlighted square to move the selected piece
+8. The game will automatically switch turns between players
+9. Use the "New Game" button to reset the board
+10. Visit the "How to Play" section for detailed tutorials
 
 ## Game Rules
 
@@ -40,12 +50,15 @@ A fully functional, two-player chess game built using vanilla HTML, CSS, and Jav
 
 - Built with vanilla JavaScript, HTML5, and CSS3
 - No external dependencies or frameworks
-- Responsive design
+- Responsive design optimized for all devices
 - Clean and intuitive user interface
+- Theme persistence using localStorage
+- Optimized animations and transitions
+- Mobile-friendly touch controls
 
 ## Development
 
-This project was developed as a demonstration of implementing complex game logic using only vanilla web technologies. The code is structured to be maintainable and extensible.
+This project was developed as a demonstration of implementing complex game logic using only vanilla web technologies. The code is structured to be maintainable and extensible, with recent updates focusing on user experience and accessibility.
 
 ## License
 

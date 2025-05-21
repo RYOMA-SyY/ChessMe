@@ -1,17 +1,49 @@
 const boardElement = document.getElementById('board');
 const statusElement = document.getElementById('status');
 const resetButton = document.getElementById('reset');
+const undoButton = document.getElementById('undo');
+const promotionModal = document.getElementById('promotionModal');
+const promotionChoices = promotionModal.querySelectorAll('.promotion-piece');
+const homeButton = document.getElementById('homeButton');
 
 let boardState;
 let selectedPiece = null;
 let validMoves = [];
 let currentPlayer = 'white';
+let boardHistory = []; // Array to store board states and player turns
+let promotingPawn = null; // To store the position of the pawn being promoted
 
 // Unicode mapping for pieces
 const pieces = {
   'r': '♜', 'n': '♞', 'b': '♝', 'q': '♛', 'k': '♚', 'p': '♟',
   'R': '♖', 'N': '♘', 'B': '♗', 'Q': '♕', 'K': '♔', 'P': '♙'
 };
+
+// Theme handling
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = themeToggle.querySelector('.theme-icon');
+
+// Check for saved theme preference
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+}
+
+// Theme toggle click handler
+themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+});
+
+// Update theme icon
+function updateThemeIcon(theme) {
+    themeIcon.textContent = theme === 'light' ? '☀️' : '🌙';
+}
 
 function initBoard() {
   boardState = [
@@ -28,6 +60,37 @@ function initBoard() {
   statusElement.textContent = "White's Turn";
   selectedPiece = null;
   validMoves = [];
+  boardHistory = []; // Clear history on new game
+  promotingPawn = null; // Reset promoting pawn
+  saveState(); // Save initial state
+}
+
+// Save the current board state and player turn
+function saveState() {
+    boardHistory.push({
+        board: cloneBoard(boardState),
+        player: currentPlayer
+    });
+}
+
+// Undo the last move
+function undoMove() {
+    // Need at least one state before the current one to undo
+    if (boardHistory.length > 1) {
+        boardHistory.pop(); // Remove current state
+        const previousState = boardHistory[boardHistory.length - 1];
+        boardState = cloneBoard(previousState.board);
+        currentPlayer = previousState.player;
+        selectedPiece = null;
+        validMoves = [];
+        // Update status based on the reverted state's player
+        statusElement.textContent = `${currentPlayer.charAt(0).toUpperCase() + currentPlayer.slice(1)}'s Turn`;
+        render();
+    } else if (boardHistory.length === 1) {
+        // If only initial state exists, reset the board to initial state
+        initBoard();
+        render();
+    }
 }
 
 function render() {
@@ -41,25 +104,33 @@ function render() {
       square.dataset.row = r;
       square.dataset.col = c;
       const piece = boardState[r][c];
-      if (piece) square.textContent = pieces[piece];
+      if (piece) {
+          square.textContent = pieces[piece];
+          // Add class based on piece color
+          if (piece === piece.toUpperCase()) {
+              square.classList.add('white-piece');
+          } else {
+              square.classList.add('black-piece');
+          }
+      }
       if (selectedPiece && selectedPiece.row === r && selectedPiece.col === c) {
         square.classList.add('selected');
       }
       if (isValid) {
         square.classList.add('valid-move');
-        // highlight capture moves differently
+        // highlight capture moves differently    
         const target = boardState[r][c];
         const isCapture = target && (
-          (currentPlayer === 'white' && target === target.toLowerCase()) ||
-          (currentPlayer === 'black' && target === target.toUpperCase())
+          (currentPlayer === 'white' && target !== target.toUpperCase()) || // Capture opponent's black piece
+          (currentPlayer === 'black' && target !== target.toLowerCase())  // Capture opponent's white piece
         );
         if (isCapture) square.classList.add('capture-move');
       }
       square.addEventListener('click', () => onSquareClick(r, c));
       boardElement.appendChild(square);
-    }
-  }
-}
+    }       
+  }         
+}          
 
 function getValidMoves(r, c) {
   const piece = boardState[r][c];
@@ -77,7 +148,7 @@ function getValidMoves(r, c) {
       // captures
       for (const dc of [-1,1]) {
         const nc = c+dc;
-        if (nc>=0&&nc<8 && boardState[nr][nc] && ((isWhite&&boardState[nr][nc]!==boardState[nr][nc].toUpperCase())||(!isWhite&&boardState[nr][nc]===boardState[nr][nc].toLowerCase()))) moves.push({row:nr,col:nc});
+        if (nc>=0&&nc<8 && boardState[nr][nc] && ((isWhite&&boardState[nr][nc]!==boardState[nr][nc].toUpperCase())||(!isWhite&&boardState[nr][nc]!==boardState[nr][nc].toLowerCase()))) moves.push({row:nr,col:nc});
       }
       break;
     case 'n':
@@ -164,18 +235,22 @@ function hasAnyLegalMoves(color) {
           if (!inCheck) return true;
         }
       }
-    }
-  }
-  return false;
+    }          
+  }         
+  return false;     
 }
-
+      
 function onSquareClick(row, col) {
+  // If a pawn is being promoted, ignore other clicks
+  if (promotingPawn) return;
+
   const piece = boardState[row][col];
+
   if (!selectedPiece) {
     if (piece && ((currentPlayer==='white'&&piece===piece.toUpperCase())||(currentPlayer==='black'&&piece===piece.toLowerCase()))) {
       selectedPiece = {row,col};
       validMoves = getValidMoves(row,col).filter(move => {
-        const orig = boardState[row][col];
+        const orig = boardState[row][col];       
         const dest = boardState[move.row][move.col];
         boardState[move.row][move.col] = orig;
         boardState[row][col] = '';
@@ -184,35 +259,98 @@ function onSquareClick(row, col) {
         boardState[move.row][move.col] = dest;
         return !inCheck;
       });
+    } else {
+        // Clicked on an empty square or opponent's piece, deselect
+        selectedPiece = null;
+        validMoves = [];
     }
   } else {
     // move or deselect
     if (validMoves.some(m=>m.row===row&&m.col===col)) {
-      boardState[row][col] = boardState[selectedPiece.row][selectedPiece.col];
+      // Move piece
+      const movedPiece = boardState[selectedPiece.row][selectedPiece.col];
+      boardState[row][col] = movedPiece;
       boardState[selectedPiece.row][selectedPiece.col] = '';
-      // Pawn promotion: auto-queen
-      const moved = boardState[row][col];
-      if (moved === 'P' && row === 0) boardState[row][col] = 'Q';
-      if (moved === 'p' && row === 7) boardState[row][col] = 'q';
-      currentPlayer = currentPlayer === 'white' ? 'black' : 'white';
-      if (isInCheck(currentPlayer)) {
-        if (!hasAnyLegalMoves(currentPlayer)) {
-          statusElement.textContent = `${currentPlayer.charAt(0).toUpperCase()+currentPlayer.slice(1)} is in Checkmate`;
-        } else {
-          statusElement.textContent = `${currentPlayer.charAt(0).toUpperCase()+currentPlayer.slice(1)} in Check`;
-        }
+
+      // Check for pawn promotion
+      if (movedPiece.toLowerCase() === 'p' && (row === 0 || row === 7)) {
+          promotingPawn = {row, col}; // Store promotion square
+          showPromotionModal(currentPlayer); // Show the modal
+          // Do not proceed with player switch, status update, saveState, or render yet
       } else {
-        if (!hasAnyLegalMoves(currentPlayer)) {
-          statusElement.textContent = 'Stalemate';
-        } else {
-          statusElement.textContent = `${currentPlayer.charAt(0).toUpperCase()+currentPlayer.slice(1)}'s Turn`;
-        }
+          // If no promotion, continue game flow
+          currentPlayer = currentPlayer === 'white' ? 'black' : 'white';
+          saveState();
+          updateStatus();
+          render();
       }
+
+    } else {
+        // Clicked on an invalid square, deselect
+        selectedPiece = null;
+        validMoves = [];
+        render(); // Re-render to remove highlights
+        return; // Stop further execution if move is invalid
     }
     selectedPiece = null;
     validMoves = [];
+    // If not promoting, render was called above. If promoting, it will be called after selection.
+    if (!promotingPawn) {
+        render();
+    }
   }
-  render();
+  // If promoting, render is handled after selection.
+  if (!promotingPawn) {
+      render();
+  }
+}
+
+// Show the promotion modal
+function showPromotionModal(playerColor) {
+    promotionModal.classList.add('show-modal');
+    // Update piece symbols in modal based on player color
+    promotionChoices.forEach(button => {
+        const pieceType = button.dataset.piece;
+        button.textContent = pieces[playerColor === 'white' ? pieceType.toUpperCase() : pieceType.toLowerCase()];
+    });
+}
+
+// Handle promotion piece selection
+promotionChoices.forEach(button => {
+    button.addEventListener('click', () => {
+        const selectedPieceType = button.dataset.piece;
+        const promotedPiece = currentPlayer === 'white' ? selectedPieceType.toUpperCase() : selectedPieceType.toLowerCase();
+        
+        // Update the board with the promoted piece
+        boardState[promotingPawn.row][promotingPawn.col] = promotedPiece;
+        
+        // Reset promoting pawn and hide modal
+        promotingPawn = null;
+        promotionModal.classList.remove('show-modal');
+        
+        // Continue game flow
+        currentPlayer = currentPlayer === 'white' ? 'black' : 'white'; // Switch player
+        saveState(); // Save state after promotion
+        updateStatus(); // Update status
+        render(); // Render the board
+    });
+});
+
+// Update the status message based on current game state
+function updateStatus() {
+    if (isInCheck(currentPlayer)) {
+        if (!hasAnyLegalMoves(currentPlayer)) {
+            statusElement.textContent = `${currentPlayer.charAt(0).toUpperCase() + currentPlayer.slice(1)} is in Checkmate`;
+        } else {
+            statusElement.textContent = `${currentPlayer.charAt(0).toUpperCase() + currentPlayer.slice(1)} in Check`;
+        }
+    } else {
+        if (!hasAnyLegalMoves(currentPlayer)) {
+            statusElement.textContent = 'Stalemate';
+        } else {
+            statusElement.textContent = `${currentPlayer.charAt(0).toUpperCase() + currentPlayer.slice(1)}'s Turn`;
+        }
+    }
 }
 
 resetButton.addEventListener('click', () => {
@@ -220,7 +358,59 @@ resetButton.addEventListener('click', () => {
   render();
 });
 
-// Initialize game
-initBoard() 
-render(); 
+undoButton.addEventListener('click', undoMove);
 
+// Add event listener for the Home button
+homeButton.addEventListener('click', () => {
+    window.location.href = 'home.html';
+});
+
+// Initialize game
+initBoard()
+render();
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Play button click handler
+    const playButton = document.querySelector('.play-button');
+    if (playButton) { // Check if playButton exists (only on home.html)
+        playButton.addEventListener('click', () => {
+            // Add loading animation
+            playButton.innerHTML = 'Loading...';
+            playButton.style.opacity = '0.7';
+            
+            // Simulate loading and redirect to game page
+            setTimeout(() => {
+                window.location.href = 'game.html';
+            }, 1000);
+        });
+    }
+
+    // Add hover effect to rules (only on home.html)
+    const rules = document.querySelectorAll('.rule');
+    if (rules.length > 0) { // Check if rules exist
+        rules.forEach(rule => {
+            rule.addEventListener('mouseenter', () => {
+                rule.style.transform = 'translateY(-5px)';
+            });
+            
+            rule.addEventListener('mouseleave', () => {
+                rule.style.transform = 'translateY(0)';
+            });
+        });
+    }
+
+    // Add subtle animation to title (only on home.html)
+    const title = document.querySelector('.title');
+    if (title) { // Check if title exists
+        title.style.opacity = '0';
+        title.style.transform = 'translateY(-20px)';
+        
+        setTimeout(() => {
+            title.style.transition = 'opacity 1s ease, transform 1s ease';
+            title.style.opacity = '1';
+            title.style.transform = 'translateY(0)';
+        }, 500);
+    }
+}); 
+
+      

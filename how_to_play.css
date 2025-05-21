@@ -1,0 +1,132 @@
+/* Specific styles for the How to Play page */
+
+.rules {
+    background: var(--glass-bg);
+    border-radius: 15px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    padding: 2rem;
+    margin-top: 2rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+}
+
+.rules h2,
+.rules h3 {
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+.rules ul {
+    margin-bottom: 1.5rem;
+    margin-left: 1.5rem;
+}
+
+.rules li {
+    margin-bottom: 0.5rem;
+}
+
+/* Ensure theme toggle button position is correct on this page */
+header .theme-toggle {
+    top: 2rem;
+    right: 2rem;
+}
+
+/* Responsive adjustments for content */
+@media (max-width: 768px) {
+    .rules {
+        padding: 1.5rem;
+    }
+    
+    .rules h2 {
+        font-size: 1.8rem;
+    }
+
+    .rules h3 {
+        font-size: 1.3rem;
+    }
+
+    header .theme-toggle {
+        top: 1rem;
+        right: 1rem;
+    }
+}
+
+/* Piece Demonstrations */
+.piece-demonstrations {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.piece-demo {
+    background: var(--glass-bg);
+    border-radius: 15px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.piece-demo h4 {
+    color: var(--text-light);
+    margin-bottom: 0.8rem;
+    font-size: 1.5rem;
+}
+
+.piece-demo p {
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.small-board {
+    width: 100%;
+    max-width: 250px; /* Adjust max width as needed */
+    aspect-ratio: 1;
+    border: 2px solid var(--primary-dark);
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.small-board .square {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: min(4vmin, 30px); /* Smaller font size for small board */
+    cursor: pointer; /* Still allow clicking for potential future interaction */
+}
+
+.small-board .light {
+    background-color: var(--board-light);
+}
+
+.small-board .dark {
+    background-color: var(--board-dark);
+}
+
+.small-board .highlight {
+     background-color: var(--highlight); /* Use the same highlight color */
+}
+
+/* Responsive adjustments for demonstrations */
+@media (max-width: 768px) {
+    .piece-demo {
+        padding: 1rem;
+    }
+
+    .piece-demo h4 {
+        font-size: 1.3rem;
+    }
+} 
