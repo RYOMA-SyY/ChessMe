@@ -3,10 +3,359 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess Master</title>
-    <meta http-equiv="refresh" content="0;url=home.html">
+    <title>Chess Master - Home</title>
+    <link rel="stylesheet" href="home.css">
 </head>
 <body>
-    <p>If you are not redirected automatically, <a href="home.html">click here</a>.</p>
+    <div class="chess-background">
+        <div class="animated-board">
+            <div class="board-row">
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+            </div>
+            <div class="board-row">
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+            </div>
+            <div class="board-row">
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+            </div>
+            <div class="board-row">
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+            </div>
+            <div class="board-row">
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+            </div>
+            <div class="board-row">
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+            </div>
+            <div class="board-row">
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+            </div>
+            <div class="board-row">
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+                <div class="board-square dark"></div>
+                <div class="board-square light"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <div class="theme-toggle">
+                <button id="themeToggle" class="theme-button" aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+            <h1 class="title">Chess Master</h1>
+            <p class="subtitle">Challenge Your Mind</p>
+        </header>
+
+        <!-- Audio Player -->
+        <div class="audio-player">
+            <div class="player-header">
+                <span class="player-title">Chess Soundtrack</span>
+                <button class="settings-button" onclick="toggleSettings()">⚙️</button>
+            </div>
+            <audio id="bgMusic" loop>
+                <source src="sounds/blue_danube.mp3" type="audio/mpeg">
+            </audio>
+            <div class="volume-control">
+                <span>🎵</span>
+                <input type="range" 
+                       class="volume-slider" 
+                       min="0" 
+                       max="100" 
+                       value="50"
+                       aria-label="Volume control"
+                       title="Adjust volume"
+                       role="slider"
+                       aria-valuemin="0"
+                       aria-valuemax="100"
+                       aria-valuenow="50">
+            </div>
+            <div class="track-selector">
+                <button class="track-button active" onclick="changeTrack('blue_danube')">The Blue Danube</button>
+                <button class="track-button" onclick="changeTrack('chess_theme')">Chess Theme</button>
+            </div>
+        </div>
+
+        <style>
+            .audio-player {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 4px solid;
+                border-image: repeating-linear-gradient(45deg, 
+                    #ef9a9a,
+                    #ef9a9a 10px,
+                    #90caf9 10px,
+                    #90caf9 20px
+                ) 1;
+                border-radius: 15px;
+                padding: 1rem;
+                z-index: 1000;
+                width: 300px;
+                transition: all 0.3s ease;
+            }
+
+            .audio-player:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            }
+
+            .player-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
+
+            .player-title {
+                font-size: 1.2rem;
+                color: #fff;
+                font-family: 'Press Start 2P', cursive;
+                text-shadow: 
+                    2px 2px 0 #ef9a9a,
+                    -2px -2px 0 #90caf9;
+            }
+
+            .settings-button {
+                background: none;
+                border: none;
+                color: #fff;
+                cursor: pointer;
+                font-size: 1.5rem;
+                transition: transform 0.3s ease;
+            }
+
+            .settings-button:hover {
+                transform: rotate(45deg);
+            }
+
+            .volume-control {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin-top: 1rem;
+            }
+
+            .volume-slider {
+                flex: 1;
+                height: 4px;
+                -webkit-appearance: none;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 2px;
+                outline: none;
+            }
+
+            .volume-slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 15px;
+                height: 15px;
+                background: #64b5f6;
+                border-radius: 50%;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .volume-slider::-webkit-slider-thumb:hover {
+                transform: scale(1.2);
+                background: #ef9a9a;
+            }
+
+            .track-selector {
+                display: none;
+                margin-top: 1rem;
+                padding-top: 1rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .track-selector.show {
+                display: block;
+            }
+
+            .track-button {
+                display: block;
+                width: 100%;
+                padding: 0.5rem;
+                margin: 0.5rem 0;
+                background: rgba(255, 255, 255, 0.1);
+                border: none;
+                border-radius: 5px;
+                color: #fff;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-family: 'Press Start 2P', cursive;
+                font-size: 0.8rem;
+            }
+
+            .track-button:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .track-button.active {
+                background: linear-gradient(45deg, #ef9a9a, #90caf9);
+            }
+
+            @media (max-width: 768px) {
+                .audio-player {
+                    width: calc(100% - 40px);
+                    bottom: 10px;
+                    right: 20px;
+                }
+            }
+        </style>
+
+        <main>
+            <div class="hero-section">
+                <div class="chess-pieces">
+                    <span class="piece">♔</span>
+                    <span class="piece">♕</span>
+                    <span class="piece">♖</span>
+                    <span class="piece">♗</span>
+                    <span class="piece">♘</span>
+                    <span class="piece">♙</span>
+                </div>
+                
+                <div class="play-button-container">
+                    <button class="play-button" onclick="startGame()">
+                        <span class="button-text">Play Now</span>
+                        <span class="button-icon">♟️</span>
+                    </button>
+                    <a href="profile.html" class="profile-button">
+                        <span class="button-text">Profile</span>
+                        <span class="button-icon">👤</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <h3>Classic Chess</h3>
+                    <p>Play the timeless game of strategy and skill</p>
+                </div>
+                <div class="feature" id="twoPlayer">
+                    <h3>Two Player</h3>
+                    <p>Play against friends in exciting multiplayer games!</p>
+                </div>
+                <a href="how_to_play.html" class="feature">
+                    <h3>Learn & Improve</h3>
+                    <p>Master the art of chess with every game</p>
+                </a>
+            </div>
+        </main>
+
+        <footer>
+            <p>Created with ♟️ Chess Master</p>
+        </footer>
+    </div>
+
+    <script src="home.js"></script>
+    <script>
+        // Add click counter for Two Player feature
+        let twoPlayerClicks = 0;
+        const twoPlayerDiv = document.getElementById('twoPlayer');
+        
+        twoPlayerDiv.addEventListener('click', () => {
+            twoPlayerClicks++;
+            if (twoPlayerClicks >= 3) {
+                window.location.href = 'gamespot.html';
+            }
+        });
+
+        // Audio Player Functionality
+        const audio = document.getElementById('bgMusic');
+        const volumeSlider = document.querySelector('.volume-slider');
+        const trackSelector = document.querySelector('.track-selector');
+        let currentTrack = 'blue_danube';
+
+        // Initialize audio
+        audio.volume = 0.5;
+        audio.play().catch(error => {
+            console.log("Audio autoplay failed:", error);
+        });
+
+        // Volume control
+        volumeSlider.addEventListener('input', (e) => {
+            const volume = e.target.value / 100;
+            audio.volume = volume;
+        });
+
+        // Toggle settings
+        function toggleSettings() {
+            trackSelector.classList.toggle('show');
+        }
+
+        // Change track
+        function changeTrack(track) {
+            if (track === currentTrack) return;
+            
+            const buttons = document.querySelectorAll('.track-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            currentTrack = track;
+            audio.src = `sounds/${track}.mp3`;
+            audio.play().catch(error => {
+                console.log("Audio play failed:", error);
+            });
+        }
+    </script>
 </body>
 </html> 
