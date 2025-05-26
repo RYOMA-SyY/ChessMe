@@ -45,6 +45,84 @@ function updateThemeIcon(theme) {
     themeIcon.textContent = theme === 'light' ? '☀️' : '🌙';
 }
 
+// Sound effects
+const moveSound = document.getElementById('moveSound');
+const captureSound = document.getElementById('captureSound');
+const checkSound = document.getElementById('checkSound');
+const volumeControl = document.getElementById('volumeControl');
+
+// Add error handling for audio loading
+function handleAudioError(audioElement, soundName) {
+  audioElement.addEventListener('error', (e) => {
+    console.error(`Error loading ${soundName}:`, e);
+  });
+  
+  audioElement.addEventListener('canplaythrough', () => {
+    console.log(`${soundName} loaded successfully`);
+  });
+}
+
+// Initialize error handling for all sounds
+handleAudioError(moveSound, 'move sound');
+handleAudioError(captureSound, 'capture sound');
+handleAudioError(checkSound, 'check sound');
+
+// Set initial volume
+moveSound.volume = volumeControl.value;
+captureSound.volume = volumeControl.value;
+checkSound.volume = volumeControl.value;
+
+// Update volume when slider changes
+volumeControl.addEventListener('input', (e) => {
+  const volume = e.target.value;
+  moveSound.volume = volume;
+  captureSound.volume = volume;
+  checkSound.volume = volume;
+});
+
+// Function to play move sound with error handling
+function playMoveSound(isCapture = false) {
+  try {
+    if (isCapture) {
+      if (captureSound.readyState >= 2) { // HAVE_CURRENT_DATA
+        captureSound.currentTime = 0;
+        captureSound.play().catch(error => {
+          console.error('Error playing capture sound:', error);
+        });
+      } else {
+        console.warn('Capture sound not ready to play');
+      }
+    } else {
+      if (moveSound.readyState >= 2) { // HAVE_CURRENT_DATA
+        moveSound.currentTime = 0;
+        moveSound.play().catch(error => {
+          console.error('Error playing move sound:', error);
+        });
+      } else {
+        console.warn('Move sound not ready to play');
+      }
+    }
+  } catch (error) {
+    console.error('Error in playMoveSound:', error);
+  }
+}
+
+// Function to play check sound with error handling
+function playCheckSound() {
+  try {
+    if (checkSound.readyState >= 2) { // HAVE_CURRENT_DATA
+      checkSound.currentTime = 0;
+      checkSound.play().catch(error => {
+        console.error('Error playing check sound:', error);
+      });
+    } else {
+      console.warn('Check sound not ready to play');
+    }
+  } catch (error) {
+    console.error('Error in playCheckSound:', error);
+  }
+}
+
 function initBoard() {
   boardState = [
     ['r','n','b','q','k','b','n','r'],
@@ -185,21 +263,21 @@ function getValidMoves(r, c) {
           if (!target||((isWhite&&target!==target.toUpperCase())||(!isWhite&&target!==target.toLowerCase()))) moves.push({row:rr,col:cc});
         }
       }
-      break;
+      break;  
   }
-  return moves;
-}
-
+  return moves;     
+    
+}      
 // Helper functions for check, checkmate, stalemate
 function cloneBoard(board) {
   return board.map(r => r.slice());
-}
+}                  
 
-function isInCheck(color) {
+function isInCheck(color) {     
   const king = color === 'white' ? 'K' : 'k';
-  let kRow, kCol;
-  for (let r = 0; r < 8; r++) {
-    for (let c = 0; c < 8; c++) {
+  let kRow, kCol;    
+  for (let r = 0; r < 8; r++) {  
+    for (let c = 0; c < 8; c++) {    
       if (boardState[r][c] === king) {
         kRow = r; kCol = c;
       }
@@ -267,10 +345,16 @@ function onSquareClick(row, col) {
   } else {
     // move or deselect
     if (validMoves.some(m=>m.row===row&&m.col===col)) {
+      // Check if this is a capture move
+      const isCapture = boardState[row][col] !== '';
+      
       // Move piece
       const movedPiece = boardState[selectedPiece.row][selectedPiece.col];
       boardState[row][col] = movedPiece;
       boardState[selectedPiece.row][selectedPiece.col] = '';
+      
+      // Play appropriate sound
+      playMoveSound(isCapture);
 
       // Check for pawn promotion
       if (movedPiece.toLowerCase() === 'p' && (row === 0 || row === 7)) {
@@ -283,6 +367,11 @@ function onSquareClick(row, col) {
           saveState();
           updateStatus();
           render();
+      }
+
+      // Check if the move puts the opponent in check
+      if (isInCheck(currentPlayer)) {
+        playCheckSound();
       }
 
     } else {

@@ -18,7 +18,7 @@ themeToggle.addEventListener('click', () => {
     localStorage.setItem('theme', newTheme);
     updateThemeIcon(newTheme);
 });
-
+       
 // Update theme icon
 function updateThemeIcon(theme) {
     themeIcon.textContent = theme === 'light' ? '☀️' : '🌙';
@@ -39,9 +39,9 @@ function startGame() {
     setTimeout(() => {     
         window.location.href = 'game.html';
     }, 1000);
-}
+} 
 
-// Add floating animation to chess pieces
+// Add floating animation to chess pieces  
 document.addEventListener('DOMContentLoaded', () => {
     const pieces = document.querySelectorAll('.piece');
     pieces.forEach((piece, index) => {

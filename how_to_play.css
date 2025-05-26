@@ -29,8 +29,10 @@
 
 /* Ensure theme toggle button position is correct on this page */
 header .theme-toggle {
+    position: fixed; /* Make the theme toggle sticky */
     top: 2rem;
     right: 2rem;
+    z-index: 1000; /* Ensure it stays on top of other content */
 }
 
 /* Responsive adjustments for content */
@@ -88,14 +90,15 @@ header .theme-toggle {
 
 .small-board {
     width: 100%;
-    max-width: 250px; /* Adjust max width as needed */
+    max-width: 200px; /* Reduced from 250px for smaller boards */
     aspect-ratio: 1;
     border: 2px solid var(--primary-dark);
     margin-top: 1rem;
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr);
+    grid-template-columns: repeat(4, 1fr); /* Changed to 4x4 grid */
+    grid-template-rows: repeat(4, 1fr);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    position: relative;
 }
 
 .small-board .square {
@@ -104,20 +107,63 @@ header .theme-toggle {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: min(4vmin, 30px); /* Smaller font size for small board */
-    cursor: pointer; /* Still allow clicking for potential future interaction */
+    font-size: min(5vmin, 35px); /* Slightly larger font for better visibility */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+.small-board .square:hover {
+    filter: brightness(1.1);
+}
+
+.small-board .square.highlight {
+    background-color: var(--highlight); /* Revert to original highlight color background */
+}
+
+.small-board .square.highlight::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15px; /* Smaller size for the dot */
+    height: 15px; /* Smaller size for the dot */
+    background-color: red; /* Red color for the dot */
+    border-radius: 50%;
+    opacity: 0.8; /* Slightly transparent dot */
+}
+
+.small-board .black-piece {
+    color: var(--text-light);
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Add a label for the board */
+.small-board::before {
+    content: attr(data-label);
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    white-space: nowrap;
 }
 
 .small-board .light {
-    background-color: var(--board-light);
+    background-color: var(--board-light); /* Original light color */
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%); /* Subtle gradient */
 }
 
 .small-board .dark {
-    background-color: var(--board-dark);
+    background-color: var(--board-dark); /* Original dark color */
+    background-image: linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%); /* Subtle gradient */
 }
 
 .small-board .highlight {
-     background-color: var(--highlight); /* Use the same highlight color */
+     background-color: var(--highlight); /* Revert to original highlight color background */
 }
 
 /* Responsive adjustments for demonstrations */

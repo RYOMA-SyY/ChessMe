@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Mario 63</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'retro-red': '#e57373',
+                        'retro-blue': '#64b5f6',
+                        'retro-dark': '#1a1a1a',
+                        'border-light': '#90caf9',
+                        'border-dark': '#ef9a9a',
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'slide-in': 'slide-in 0.5s ease-out',
+                        'fade-in': 'fade-in 0.5s ease-out',
+                    },
+                    keyframes: {
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        'slide-in': {
+                            '0%': { transform: 'translateY(-100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        'fade-in': {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="HF.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        .retro-font {
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .game-container {
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 4px solid;
+            border-image: repeating-linear-gradient(45deg, 
+                #ef9a9a,
+                #ef9a9a 10px,
+                #90caf9 10px,
+                #90caf9 20px
+            ) 1;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .game-container.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            background: #000;
+        }
+
+        .retro-title {
+            text-shadow: 
+                2px 2px 0 #ef9a9a,
+                -2px -2px 0 #90caf9;
+        }
+
+        /* Audio Player Styles */
+        .audio-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 4px solid;
+            border-image: repeating-linear-gradient(45deg, 
+                #ef9a9a,
+                #ef9a9a 10px,
+                #90caf9 10px,
+                #90caf9 20px
+            ) 1;
+            border-radius: 15px;
+            padding: 1rem;
+            z-index: 1000;
+            width: 300px;
+            transition: all 0.3s ease;
+        }
+
+        .audio-player:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .player-title {
+            font-size: 1.2rem;
+            color: #fff;
+            font-family: 'Press Start 2P', cursive;
+            text-shadow: 
+                2px 2px 0 #ef9a9a,
+                -2px -2px 0 #90caf9;
+        }
+
+        .settings-button {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .settings-button:hover {
+            transform: rotate(45deg);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .volume-slider {
+            flex: 1;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #64b5f6;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: #ef9a9a;
+        }
+
+        .track-selector {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .track-selector.show {
+            display: block;
+        }
+
+        .track-button {
+            display: block;
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+        }
+
+        .track-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .track-button.active {
+            background: linear-gradient(45deg, #ef9a9a, #90caf9);
+        }
+
+        @media (max-width: 768px) {
+            .audio-player {
+                width: calc(100% - 40px);
+                bottom: 10px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-retro-dark text-white min-h-screen">
+    <!-- Enhanced Animated Header -->
+    <header class="relative overflow-hidden bg-gradient-to-b from-black/80 to-transparent">
+        <!-- Animated Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2390caf9' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        </div>
+
+        <!-- Main Navigation -->
+        <nav class="navbar relative z-10 animate-slide-in">
+            <div class="nav-content bg-black/50 backdrop-blur-sm p-6 rounded-lg border border-retro-blue/20">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <a href="#" class="nav-brand retro-font text-3xl retro-title animate-float">
+                        Super Mario 63
+                    </a>
+                    <ul class="nav-links flex gap-6">
+                        <li><a href="gamespot.html" class="hover:text-retro-red transition-colors text-lg">Game Spot</a></li>
+                        <li><a href="home.html" class="hover:text-retro-blue transition-colors text-lg">Chess</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Game Container with Enhanced Fullscreen Button -->
+        <div class="relative animate-fade-in">
+            <div id="game-container" class="game-container mx-auto">
+                <!-- Game will be loaded here -->
+            </div>
+            <button id="fullscreen-btn" 
+                    class="absolute top-4 right-4 bg-gradient-to-r from-retro-red to-retro-blue 
+                           hover:from-retro-blue hover:to-retro-red text-white px-6 py-3 
+                           rounded-lg transition-all duration-300 transform hover:scale-105
+                           shadow-lg hover:shadow-xl">
+                <span class="retro-font text-sm">Fullscreen</span>
+            </button>
+        </div>
+
+        <!-- Game Details with Enhanced Styling -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in">
+            <div class="bg-black/50 p-6 rounded-lg game-container transform hover:scale-105 transition-transform">
+                <h2 class="retro-font text-xl mb-4 text-retro-red">Game Description</h2>
+                <p class="text-gray-300 leading-relaxed">
+                    Super Mario 63 is a fan-made platformer that brings the classic Mario experience to your browser. 
+                    Jump, run, and collect coins as you navigate through challenging levels filled with enemies and obstacles.
+                </p>
+            </div>
+            <div class="bg-black/50 p-6 rounded-lg game-container transform hover:scale-105 transition-transform">
+                <h2 class="retro-font text-xl mb-4 text-retro-blue">How to Play</h2>
+                <ul class="text-gray-300 space-y-2">
+                    <li>• Use Arrow Keys to move and jump</li>
+                    <li>• Collect coins to increase your score</li>
+                    <li>• Avoid enemies and obstacles</li>
+                    <li>• Reach the flagpole to complete each level</li>
+                    <li>• Press ESC to pause the game</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-12 bg-black/50 py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p class="retro-font text-sm text-gray-400">© 2024 Retro Games. All rights reserved.</p>
+            <div class="mt-4 space-x-4">
+                <a href="https://discord.gg/yTY7CcWQxu" class="text-retro-red hover:text-retro-blue transition-colors">Discord</a>
+                <a href="https://github.com/RYOMA-SyY" class="text-retro-red hover:text-retro-blue transition-colors">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Audio Player -->
+    <div class="audio-player">
+        <div class="player-header">
+            <span class="player-title">Game Soundtrack</span>
+            <button class="settings-button" onclick="toggleSettings()">⚙️</button>
+        </div>
+        <audio id="bgMusic" loop>
+            <source src="sounds/mario_theme.mp3" type="audio/mpeg">
+        </audio>
+        <div class="volume-control">
+            <span>🔊</span>
+            <input type="range" 
+                   class="volume-slider" 
+                   min="0" 
+                   max="100" 
+                   value="50"
+                   aria-label="Volume control"
+                   title="Adjust volume"
+                   role="slider"
+                   aria-valuemin="0"
+                   aria-valuemax="100"
+                   aria-valuenow="50">
+        </div>
+        <div class="track-selector">
+            <button class="track-button active" onclick="changeTrack('dbz3')">Dragon Ball Budokai 3</button>
+            <button class="track-button" onclick="changeTrack('gow')">God of War</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    <script>
+        // Ruffle Player Setup
+        window.RufflePlayer = window.RufflePlayer || {};
+        window.addEventListener("DOMContentLoaded", () => {
+            const ruffle = window.RufflePlayer.newest();
+            const container = document.getElementById("game-container");
+            const player = ruffle.createPlayer();
+            container.appendChild(player);
+            player.load("swf/supermario63.swf");
+        });
+
+        // Fullscreen Functionality
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const gameContainer = document.getElementById('game-container');
+
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                gameContainer.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        // Audio Player Functionality
+        const audio = document.getElementById('bgMusic');
+        const volumeSlider = document.querySelector('.volume-slider');
+        const trackSelector = document.querySelector('.track-selector');
+        let currentTrack = 'dbz3';
+
+        // Initialize audio
+        audio.volume = 0.5;
+        audio.play().catch(error => {
+            console.log("Audio autoplay failed:", error);
+        });
+
+        // Volume control
+        volumeSlider.addEventListener('input', (e) => {
+            const volume = e.target.value / 100;
+            audio.volume = volume;
+        });
+
+        // Toggle settings
+        function toggleSettings() {
+            trackSelector.classList.toggle('show');
+        }
+
+        // Change track
+        function changeTrack(track) {
+            if (track === currentTrack) return;
+            
+            const buttons = document.querySelectorAll('.track-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            currentTrack = track;
+            audio.src = `sounds/${track}.mp3`;
+            audio.play().catch(error => {
+                console.log("Audio play failed:", error);
+            });
+        }
+    </script>
+</body>
+</html>

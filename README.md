@@ -12,18 +12,29 @@ A fully functional, two-player chess game built using vanilla HTML, CSS, and Jav
 - 🔄 Reset functionality for new games
 - 🌓 Dark/Light theme toggle with persistent preferences
 - 🎨 Modern landing page with animated chess board background
-- 📚 Interactive "How to Play" guide with piece movement demonstrations
+- 📚 Interactive "How to Play" guide with piece movement demonstrations and interactive mini-boards
+- 👤 Player profiles with statistics tracking and achievement system
+- 🔊 Sound effects for piece movements and game events
 - 📱 Responsive design for all screen sizes
+- 🎯 Interactive piece movement demonstrations with toggleable move indicators
+- 🏆 Achievement system with progress tracking
+- 📊 Detailed game statistics and performance metrics
 
 ## Project Structure
 
 - `home.html` - Landing page with animated background and theme toggle
-- `index.html` - Main game interface
+- `game.html` - Main game interface
 - `how_to_play.html` - Interactive tutorial page
+- `profile.html` - Player profile and statistics page
 - `style.css` - Core styling for the game interface
 - `home.css` - Styling for the landing page
+- `how_to_play.css` - Styling for the tutorial page
+- `profile.css` - Styling for the profile page
 - `script.js` - Core game logic and functionality
 - `home.js` - Landing page interactions and theme management
+- `how_to_play.js` - Tutorial page interactions
+- `profile.js` - Profile page functionality
+- `sounds/` - Directory containing game sound effects
 
 ## How to Play
 
@@ -37,6 +48,7 @@ A fully functional, two-player chess game built using vanilla HTML, CSS, and Jav
 8. The game will automatically switch turns between players
 9. Use the "New Game" button to reset the board
 10. Visit the "How to Play" section for detailed tutorials
+11. Check your profile page to view your game statistics
 
 ## Game Rules
 
@@ -45,6 +57,7 @@ A fully functional, two-player chess game built using vanilla HTML, CSS, and Jav
 - Illegal moves are prevented
 - Check and checkmate detection is implemented
 - Capturing opponent's pieces is supported
+- Game statistics are tracked and displayed in the profile section
 
 ## Technical Details
 
@@ -55,10 +68,15 @@ A fully functional, two-player chess game built using vanilla HTML, CSS, and Jav
 - Theme persistence using localStorage
 - Optimized animations and transitions
 - Mobile-friendly touch controls
+- Sound effects for enhanced gameplay experience
+- Player statistics tracking and persistence
+- Interactive mini-boards for piece movement demonstrations
+- Achievement system with progress tracking
+- Enhanced visual feedback for game actions
 
 ## Development
 
-This project was developed as a demonstration of implementing complex game logic using only vanilla web technologies. The code is structured to be maintainable and extensible, with recent updates focusing on user experience and accessibility.
+This project was developed as a demonstration of implementing complex game logic using only vanilla web technologies. The code is structured to be maintainable and extensible, with recent updates focusing on user experience, accessibility, and additional features like player profiles and sound effects.
 
 ## License
 
